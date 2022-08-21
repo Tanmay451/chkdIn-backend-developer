@@ -1,7 +1,7 @@
 package routes
 
 import (
-	"fmt"
+	"chkdIn-backend-developer/models"
 	"log"
 	"net/http"
 
@@ -17,6 +17,13 @@ func TokenAuth(c *gin.Context) {
 		c.Redirect(http.StatusFound, AuthFailed)
 		return
 	}
-	fmt.Println("tokenString: ", tokenString)
+
+	if !models.IsSessionValid(tokenString) {
+		log.Println("TokenAuth: failed while getting token string from cookie with error: ", err)
+		AuthFailed := "/api/auth-failed"
+		c.Redirect(http.StatusFound, AuthFailed)
+		return
+	}
+
 	c.Next()
 }

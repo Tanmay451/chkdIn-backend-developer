@@ -306,3 +306,43 @@ func DeleteUser(user User) error {
 
 	return nil
 }
+
+// IsSessionValid
+func IsSessionValid(token string) bool {
+	db, err := config.GetDB()
+	if err != nil {
+		log.Println("IsSessionValid: Failed while connecting with the database with an error: ", err)
+		return false
+	}
+	defer db.Close()
+
+	var id sql.NullInt64
+	var userId sql.NullInt32
+	var createdAt sql.NullTime
+
+	query := `
+		SELECT
+			id,
+			user_id,
+			created_at
+		FROM 
+			user_session 
+		WHERE 
+			token=$1`
+
+	err = db.QueryRow(query, token).Scan(
+		&id,
+		&userId,
+		&createdAt,
+	)
+	if err != nil {
+		log.Println("IsSessionValid: Failed while fetching record for given token with an error: ", err, "\t email: ", token)
+		return false
+	}
+
+	if time.Since(createdAt.Time) > time.Minute*60*24*30 {
+		return false
+	}
+
+	return true
+}

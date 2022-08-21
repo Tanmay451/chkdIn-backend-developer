@@ -13,11 +13,11 @@ import (
 func AddRoutes(router *gin.RouterGroup) {
 	api := router.Group("/api")
 	{
-		api.GET("/user-list", controllers.GetUserList)
+		api.GET("/user-list", TokenAuth, controllers.GetUserList)
 		api.POST("/register", controllers.Register)
 		api.POST("/authenticate", controllers.Authenticate)
-		api.PATCH("/update-user-status", controllers.UpdateUserStatus) // need to refactor
-		api.DELETE("delete-user", controllers.DeleteUser)
+		api.PATCH("/update-user-status", TokenAuth, controllers.UpdateUserStatus) // need to refactor
+		api.DELETE("delete-user", TokenAuth, controllers.DeleteUser)
 
 		api.GET("/auth-failed", controllers.AuthenticateFailed)
 	}

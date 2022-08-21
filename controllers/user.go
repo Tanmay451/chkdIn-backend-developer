@@ -48,7 +48,7 @@ func Register(c *gin.Context) {
 		return
 	}
 
-	c.JSON(http.StatusOK, gin.H{})
+	c.JSON(http.StatusOK, gin.H{"status": "success"})
 }
 
 func Authenticate(c *gin.Context) {
@@ -90,7 +90,7 @@ func Authenticate(c *gin.Context) {
 
 	fmt.Println("email: ", email, "\npassword: ", password, "\ntoken: ", session.Token, "\nuser id: ", user.ID)
 
-	c.JSON(http.StatusOK, gin.H{})
+	c.JSON(http.StatusOK, gin.H{"status": "success"})
 }
 
 func GetUserList(c *gin.Context) {
